@@ -38,14 +38,12 @@
 
 const PROJECTS = [
   {
-    title: "Falcon — Automotive Spot",
-    category: "Commercials",
-    camera: "RED Komodo 6K",
+    title: "Yelo — KSA",
+    category: "TVC",
     software: "DaVinci Resolve Studio",
-    notes: "Flat LOG under mixed tungsten and daylight. Rebuilt skin tones, custom film emulation for the night exteriors.",
-    beforeImage: "https://picsum.photos/id/111/1280/720?grayscale",
-    afterImage: "https://picsum.photos/id/111/1280/720",
-    vimeoId: "76979871",
+    beforeImage: "images/Yelo/1.png",
+    afterImage: "images/Yelo/2.png",
+    vimeoId: "559342685",
     featured: true
   },
   {
