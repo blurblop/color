@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muhammad — Colorist</title>
+<meta name="description" content="Color grading portfolio — commercials, film, drone and music videos. Based in Bahrain, working across the GCC.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@1,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="bar top">
+  <span class="edge"><span>MUHAMMAD ▸ COLORIST</span><span>KODAK 5219 ▸ 500T</span></span>
+  <div class="nav-links">
+    <a href="index.html" class="active">Work</a>
+    <a href="archive.html">Archive</a>
+    <a href="about.html">About</a>
+  </div>
+</div>
+
+<div class="bar bottom">
+  <span class="edge"><span id="frame-count">FRAME 000000</span><span>REC.709 ▸ 2.39:1</span></span>
+  <span>BAHRAIN / GCC</span>
+</div>
+
+<nav class="reel-index" id="reel-index" aria-label="Project index"></nav>
+
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+
+<main class="stage" id="stage">
+
+  <section class="panel" id="panel-hero">
+    <canvas id="scope" aria-hidden="true"></canvas>
+    <h1 class="hero-title">Muhammad<span class="it">colorist.</span></h1>
+    <p class="hero-sub">Commercials · Film · Aerial · Music Videos<br>DaVinci Resolve Studio — Bahrain / GCC</p>
+    <p class="scroll-hint">Scroll to screen ▾</p>
+  </section>
+
+  <!-- project panels are rendered here by script from projects.js -->
+
+  <section class="panel" id="panel-outro">
+    <h2 class="outro-title">Your footage,<span class="it">graded.</span></h2>
+    <a class="archive-link" href="archive.html">View the full archive <span id="archive-count"></span> →</a>
+    <!-- EDIT: replace with your real links -->
+    <div class="contact-row">
+      <a href="mailto:hello@example.com">Email</a>
+      <a href="https://wa.me/973XXXXXXXX" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="https://instagram.com/yourhandle" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+    <p class="outro-foot">© <span id="year"></span> Muhammad — Colorist, Bahrain · Graded on DaVinci Resolve</p>
+  </section>
+
+</main>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Video player">
+  <button class="close" id="modal-close">Close ✕</button>
+  <div class="frame" id="modal-frame"></div>
+</div>
+
+<script src="projects.js"></script>
+<script>
+/* ============================================================
+   You should not need to edit below this line.
+   All content comes from projects.js
+   ============================================================ */
+
+document.getElementById("year").textContent = new Date().getFullYear();
+const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* Home screening shows featured projects only; the Archive page
+   shows everything. If nothing is marked featured, show all. */
+const FEATURED = PROJECTS.filter(p => p.featured);
+const REEL = FEATURED.length ? FEATURED : PROJECTS;
+const ac = document.getElementById("archive-count");
+if (ac) ac.textContent = "(" + PROJECTS.length + " projects)";
+
+/* ----- Build project panels ----- */
+const stage = document.getElementById("stage");
+const outro = document.getElementById("panel-outro");
+const reelIndex = document.getElementById("reel-index");
+
+REEL.forEach((p, i) => {
+  const n = String(i + 1).padStart(2, "0");
+  const sec = document.createElement("section");
+  sec.className = "panel project";
+  sec.id = "panel-" + n;
+
+  const roomImg = p.afterImage || p.beforeImage || "";
+  const meta = [p.category, p.camera, p.software].filter(Boolean).join(" · ");
+  const hasSlider = p.beforeImage && p.afterImage;
+  const hasStill = !hasSlider && p.afterImage;
+
+  let media = "";
+  if (hasSlider) {
+    media += `
+      <div class="compare" data-cursor="DRAG" role="slider" tabindex="0"
+           aria-label="Before and after comparison for ${p.title}"
+           aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        <img src="${p.beforeImage}" alt="${p.title} — before grade" loading="lazy">
+        <div class="after-wrap"><img src="${p.afterImage}" alt="${p.title} — after grade" loading="lazy"></div>
+        <span class="tag before">Before</span><span class="tag after">After</span>
+        <div class="divider"></div><div class="handle">&#8596;</div>
+      </div>`;
+  } else if (hasStill) {
+    media += `<div class="still"><img src="${p.afterImage}" alt="${p.title} — graded still" loading="lazy"></div>`;
+  }
+
+  if (p.vimeoId) {
+    if (hasSlider || hasStill) {
+      media += `
+        <button class="watch" data-cursor="PLAY" data-vimeo="${p.vimeoId}" data-vtitle="${p.title}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          Watch — Before / After Cut
+        </button>`;
+    } else {
+      media += `
+        <div class="video-solo" data-cursor="PLAY" data-vimeo="${p.vimeoId}" data-vtitle="${p.title}" role="button" tabindex="0" aria-label="Play ${p.title}">
+          <div class="ring"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+          <span class="lbl">Watch the film</span>
+        </div>`;
+    }
+  }
+
+  sec.innerHTML = `
+    ${roomImg ? `<div class="room" style="background-image:url('${roomImg}')"></div>` : ""}
+    <div class="room-dim"></div>
+    <div class="p-head">
+      <p class="p-num">Reel ${n} / ${String(REEL.length).padStart(2, "0")}</p>
+      <h2 class="p-title">${p.title}</h2>
+      <p class="p-meta">${meta}</p>
+    </div>
+    <div class="p-media">${media}</div>
+    ${p.notes ? `<p class="p-notes">${p.notes}</p>` : ""}
+  `;
+
+  stage.insertBefore(sec, outro);
+
+  const idx = document.createElement("a");
+  idx.href = "#panel-" + n;
+  idx.textContent = n;
+  idx.addEventListener("click", e => {
+    e.preventDefault();
+    sec.scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+  });
+  reelIndex.appendChild(idx);
+});
+
+/* ----- Sliders ----- */
+document.querySelectorAll(".compare").forEach(box => {
+  const afterWrap = box.querySelector(".after-wrap");
+  const divider = box.querySelector(".divider");
+  const handle = box.querySelector(".handle");
+  let pos = 50;
+  function setPos(pct) {
+    pos = Math.max(0, Math.min(100, pct));
+    afterWrap.style.clipPath = `inset(0 0 0 ${pos}%)`;
+    divider.style.left = pos + "%";
+    handle.style.left = pos + "%";
+    box.setAttribute("aria-valuenow", Math.round(pos));
+  }
+  setPos(50);
+  function move(e) {
+    const r = box.getBoundingClientRect();
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+    setPos((x / r.width) * 100);
+  }
+  let drag = false;
+  box.addEventListener("pointerdown", e => { drag = true; box.setPointerCapture(e.pointerId); move(e); });
+  box.addEventListener("pointermove", e => { if (drag) move(e); });
+  box.addEventListener("pointerup", () => drag = false);
+  box.addEventListener("pointercancel", () => drag = false);
+  box.addEventListener("keydown", e => {
+    if (e.key === "ArrowLeft") { setPos(pos - 4); e.preventDefault(); }
+    if (e.key === "ArrowRight") { setPos(pos + 4); e.preventDefault(); }
+  });
+});
+
+/* ----- Video modal ----- */
+const modal = document.getElementById("modal");
+const modalFrame = document.getElementById("modal-frame");
+function openVideo(id, title) {
+  modalFrame.innerHTML = `<iframe src="https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0"
+    allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${title} — Vimeo"></iframe>`;
+  modal.classList.add("open");
+}
+function closeVideo() { modal.classList.remove("open"); modalFrame.innerHTML = ""; }
+document.querySelectorAll("[data-vimeo]").forEach(el => {
+  el.addEventListener("click", () => openVideo(el.dataset.vimeo, el.dataset.vtitle));
+  el.addEventListener("keydown", e => {
+    if ((e.key === "Enter" || e.key === " ") && el.classList.contains("video-solo")) {
+      e.preventDefault(); openVideo(el.dataset.vimeo, el.dataset.vtitle);
+    }
+  });
+});
+document.getElementById("modal-close").addEventListener("click", closeVideo);
+modal.addEventListener("click", e => { if (e.target === modal) closeVideo(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeVideo(); });
+
+/* ----- Reel index active state ----- */
+const panels = [...document.querySelectorAll(".panel.project")];
+const links = [...reelIndex.querySelectorAll("a")];
+const io = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    const i = panels.indexOf(en.target);
+    if (i > -1 && en.isIntersecting) {
+      links.forEach(l => l.classList.remove("active"));
+      links[i].classList.add("active");
+    }
+  });
+}, { root: stage, threshold: 0.55 });
+panels.forEach(p => io.observe(p));
+
+/* ----- Frame counter in bottom bar ----- */
+(function () {
+  const el = document.getElementById("frame-count");
+  if (reduced) return;
+  let f = 0;
+  setInterval(() => { f++; el.textContent = "FRAME " + String(f).padStart(6, "0"); }, 1000 / 24);
+})();
+
+/* ----- Custom cursor ----- */
+(function () {
+  if (window.matchMedia("(pointer: coarse)").matches) return;
+  const c = document.getElementById("cursor");
+  let x = -100, y = -100, cx = -100, cy = -100;
+  document.addEventListener("pointermove", e => { x = e.clientX; y = e.clientY; });
+  function loop() {
+    cx += (x - cx) * 0.22; cy += (y - cy) * 0.22;
+    c.style.left = cx + "px"; c.style.top = cy + "px";
+    requestAnimationFrame(loop);
+  }
+  loop();
+  document.addEventListener("pointerover", e => {
+    const t = e.target.closest("[data-cursor]");
+    if (t) { c.classList.add("big"); c.textContent = t.dataset.cursor; }
+    else { c.classList.remove("big"); c.textContent = ""; }
+  });
+})();
+
+/* ----- Vectorscope (hero canvas) ----- */
+(function () {
+  const cv = document.getElementById("scope");
+  const ctx = cv.getContext("2d");
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  function size() {
+    const s = cv.getBoundingClientRect().width;
+    cv.width = s * dpr; cv.height = s * dpr;
+  }
+  size();
+  window.addEventListener("resize", size);
+
+  const targets = ["R", "MG", "B", "CY", "G", "YL"];
+  const pts = Array.from({ length: 260 }, () => ({
+    a: Math.random() * Math.PI * 2,
+    r: Math.pow(Math.random(), 1.6) * 0.72,
+    da: (Math.random() - 0.5) * 0.004,
+    dr: (Math.random() - 0.5) * 0.0025
+  }));
+
+  function draw(t) {
+    const w = cv.width, cx = w / 2, R = w * 0.44;
+    ctx.clearRect(0, 0, w, w);
+    ctx.strokeStyle = "rgba(240,237,229,0.16)";
+    ctx.lineWidth = 1 * dpr;
+
+    ctx.beginPath(); ctx.arc(cx, cx, R, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cx, R * 0.5, 0, Math.PI * 2); ctx.stroke();
+
+    for (let i = 0; i < 36; i++) {
+      const a = (i / 36) * Math.PI * 2;
+      const l = i % 3 === 0 ? 0.94 : 0.97;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a) * R * l, cx + Math.sin(a) * R * l);
+      ctx.lineTo(cx + Math.cos(a) * R, cx + Math.sin(a) * R);
+      ctx.stroke();
+    }
+
+    ctx.font = `${10 * dpr}px "Space Mono", monospace`;
+    ctx.fillStyle = "rgba(240,237,229,0.35)";
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    targets.forEach((lbl, i) => {
+      const a = -Math.PI / 2 + (i / 6) * Math.PI * 2 + 0.3;
+      const tx = cx + Math.cos(a) * R * 0.82, ty = cx + Math.sin(a) * R * 0.82;
+      ctx.strokeRect(tx - 7 * dpr, ty - 7 * dpr, 14 * dpr, 14 * dpr);
+      ctx.fillText(lbl, tx, ty - 14 * dpr);
+    });
+
+    const sa = -Math.PI / 2 - 0.58;
+    ctx.beginPath();
+    ctx.moveTo(cx, cx);
+    ctx.lineTo(cx + Math.cos(sa) * R, cx + Math.sin(sa) * R);
+    ctx.strokeStyle = "rgba(240,237,229,0.22)";
+    ctx.stroke();
+
+    ctx.fillStyle = "rgba(110,231,160,0.5)";
+    const drift = reduced ? 0 : t * 0.00012;
+    pts.forEach(p => {
+      if (!reduced) { p.a += p.da; p.r += p.dr; if (p.r < 0.02 || p.r > 0.74) p.dr *= -1; }
+      const wob = Math.sin(p.a * 3 + drift * 40) * 0.03;
+      const px = cx + Math.cos(p.a + drift) * (p.r + wob) * R;
+      const py = cx + Math.sin(p.a + drift) * (p.r + wob) * R;
+      ctx.fillRect(px, py, 1.6 * dpr, 1.6 * dpr);
+    });
+
+    if (!reduced) requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>

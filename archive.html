@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archive — Muhammad, Colorist</title>
+<meta name="description" content="Full archive of color grading work — commercials, film, drone and music videos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@1,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>body { overflow-y: auto; }</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="bar top">
+  <span class="edge"><span>MUHAMMAD ▸ COLORIST</span><span>KODAK 5219 ▸ 500T</span></span>
+  <div class="nav-links">
+    <a href="index.html">Work</a>
+    <a href="archive.html" class="active">Archive</a>
+    <a href="about.html">About</a>
+  </div>
+</div>
+
+<div class="bar bottom">
+  <span class="edge"><span>FULL ARCHIVE</span></span>
+  <span>BAHRAIN / GCC</span>
+</div>
+
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+
+<main class="archive-wrap">
+  <h1>The Archive</h1>
+  <p class="count"><span id="total"></span> projects · every grade, every reel</p>
+
+  <div class="archive-filters" id="filters"></div>
+  <div class="archive-grid" id="grid"></div>
+</main>
+
+<!-- Fullscreen project viewer -->
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="Project viewer">
+  <div class="v-room" id="v-room"></div>
+  <div class="v-dim"></div>
+  <button class="v-close" id="v-close">Close ✕</button>
+  <div class="v-content" id="v-content"></div>
+  <div class="v-nav">
+    <button id="v-prev">◂ Prev</button>
+    <button id="v-next">Next ▸</button>
+  </div>
+</div>
+
+<!-- Video modal (sits above the viewer) -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Video player">
+  <button class="close" id="modal-close">Close ✕</button>
+  <div class="frame" id="modal-frame"></div>
+</div>
+
+<script src="projects.js"></script>
+<script>
+/* ============================================================
+   Archive: grid of ALL projects. Click a tile to open it in
+   a fullscreen suite-style viewer with prev/next.
+   All content comes from projects.js
+   ============================================================ */
+
+const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+document.getElementById("total").textContent = PROJECTS.length;
+
+const grid = document.getElementById("grid");
+const filterBar = document.getElementById("filters");
+const categories = ["All", ...new Set(PROJECTS.map(p => p.category))];
+let activeCategory = "All";
+let shown = [...PROJECTS];
+
+categories.forEach(cat => {
+  const btn = document.createElement("button");
+  btn.textContent = cat;
+  if (cat === "All") btn.classList.add("active");
+  btn.addEventListener("click", () => {
+    activeCategory = cat;
+    filterBar.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderGrid();
+  });
+  filterBar.appendChild(btn);
+});
+
+function thumbHTML(p) {
+  const img = p.afterImage || p.beforeImage;
+  if (img) return `<img src="${img}" alt="${p.title} — graded still" loading="lazy">`;
+  return `<div class="vid-ph"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>`;
+}
+
+function renderGrid() {
+  shown = PROJECTS.filter(p => activeCategory === "All" || p.category === activeCategory);
+  grid.innerHTML = "";
+  shown.forEach((p, i) => {
+    const t = document.createElement("div");
+    t.className = "tile";
+    t.setAttribute("role", "button");
+    t.setAttribute("tabindex", "0");
+    t.setAttribute("aria-label", "Open " + p.title);
+    t.innerHTML = `
+      <div class="thumb">
+        ${thumbHTML(p)}
+        <span class="badge">${p.category}</span>
+      </div>
+      <p class="t-title">${p.title}</p>
+      <p class="t-meta">${[p.camera, p.software].filter(Boolean).join(" · ") || "&nbsp;"}</p>
+    `;
+    t.addEventListener("click", () => openViewer(i));
+    t.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openViewer(i); } });
+    grid.appendChild(t);
+  });
+}
+renderGrid();
+
+/* ----- Fullscreen viewer ----- */
+const viewer = document.getElementById("viewer");
+const vRoom = document.getElementById("v-room");
+const vContent = document.getElementById("v-content");
+const vPrev = document.getElementById("v-prev");
+const vNext = document.getElementById("v-next");
+let vIndex = 0;
+
+function mediaHTML(p) {
+  const hasSlider = p.beforeImage && p.afterImage;
+  const hasStill = !hasSlider && p.afterImage;
+  let m = "";
+  if (hasSlider) {
+    m += `
+      <div class="compare" data-cursor="DRAG" role="slider" tabindex="0"
+           aria-label="Before and after comparison for ${p.title}"
+           aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        <img src="${p.beforeImage}" alt="${p.title} — before grade">
+        <div class="after-wrap"><img src="${p.afterImage}" alt="${p.title} — after grade"></div>
+        <span class="tag before">Before</span><span class="tag after">After</span>
+        <div class="divider"></div><div class="handle">&#8596;</div>
+      </div>`;
+  } else if (hasStill) {
+    m += `<div class="still"><img src="${p.afterImage}" alt="${p.title} — graded still"></div>`;
+  }
+  if (p.vimeoId) {
+    if (hasSlider || hasStill) {
+      m += `
+        <button class="watch" data-cursor="PLAY" data-vimeo="${p.vimeoId}" data-vtitle="${p.title}" style="display:flex;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          Watch — Before / After Cut
+        </button>`;
+    } else {
+      m += `
+        <div class="video-solo" data-cursor="PLAY" data-vimeo="${p.vimeoId}" data-vtitle="${p.title}" role="button" tabindex="0" aria-label="Play ${p.title}">
+          <div class="ring"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+          <span class="lbl">Watch the film</span>
+        </div>`;
+    }
+  }
+  return m;
+}
+
+function renderViewer() {
+  const p = shown[vIndex];
+  const n = String(vIndex + 1).padStart(2, "0");
+  const roomImg = p.afterImage || p.beforeImage || "";
+  vRoom.style.backgroundImage = roomImg ? `url('${roomImg}')` : "none";
+  const meta = [p.category, p.camera, p.software].filter(Boolean).join(" · ");
+  vContent.innerHTML = `
+    <div class="p-head">
+      <p class="p-num">Reel ${n} / ${String(shown.length).padStart(2, "0")}</p>
+      <h2 class="p-title">${p.title}</h2>
+      <p class="p-meta">${meta}</p>
+    </div>
+    <div class="p-media">${mediaHTML(p)}</div>
+    ${p.notes ? `<p class="p-notes">${p.notes}</p>` : ""}
+  `;
+  const cmp = vContent.querySelector(".compare");
+  if (cmp) initCompare(cmp);
+  vContent.querySelectorAll("[data-vimeo]").forEach(bindVideo);
+  vPrev.disabled = vIndex === 0;
+  vNext.disabled = vIndex === shown.length - 1;
+}
+
+function openViewer(i) {
+  vIndex = i;
+  renderViewer();
+  viewer.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeViewer() {
+  viewer.classList.remove("open");
+  document.body.style.overflow = "";
+}
+document.getElementById("v-close").addEventListener("click", closeViewer);
+vPrev.addEventListener("click", () => { if (vIndex > 0) { vIndex--; renderViewer(); } });
+vNext.addEventListener("click", () => { if (vIndex < shown.length - 1) { vIndex++; renderViewer(); } });
+document.addEventListener("keydown", e => {
+  if (!viewer.classList.contains("open")) return;
+  if (e.key === "Escape" && !modal.classList.contains("open")) closeViewer();
+  if (e.key === "ArrowUp" && vIndex > 0) { vIndex--; renderViewer(); }
+  if (e.key === "ArrowDown" && vIndex < shown.length - 1) { vIndex++; renderViewer(); }
+});
+
+/* ----- Slider ----- */
+function initCompare(box) {
+  const afterWrap = box.querySelector(".after-wrap");
+  const divider = box.querySelector(".divider");
+  const handle = box.querySelector(".handle");
+  let pos = 50;
+  function setPos(pct) {
+    pos = Math.max(0, Math.min(100, pct));
+    afterWrap.style.clipPath = `inset(0 0 0 ${pos}%)`;
+    divider.style.left = pos + "%";
+    handle.style.left = pos + "%";
+    box.setAttribute("aria-valuenow", Math.round(pos));
+  }
+  setPos(50);
+  function move(e) {
+    const r = box.getBoundingClientRect();
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+    setPos((x / r.width) * 100);
+  }
+  let drag = false;
+  box.addEventListener("pointerdown", e => { drag = true; box.setPointerCapture(e.pointerId); move(e); });
+  box.addEventListener("pointermove", e => { if (drag) move(e); });
+  box.addEventListener("pointerup", () => drag = false);
+  box.addEventListener("pointercancel", () => drag = false);
+  box.addEventListener("keydown", e => {
+    if (e.key === "ArrowLeft") { setPos(pos - 4); e.preventDefault(); e.stopPropagation(); }
+    if (e.key === "ArrowRight") { setPos(pos + 4); e.preventDefault(); e.stopPropagation(); }
+  });
+}
+
+/* ----- Video modal ----- */
+const modal = document.getElementById("modal");
+const modalFrame = document.getElementById("modal-frame");
+function bindVideo(el) {
+  el.addEventListener("click", () => {
+    modalFrame.innerHTML = `<iframe src="https://player.vimeo.com/video/${el.dataset.vimeo}?autoplay=1&title=0&byline=0&portrait=0"
+      allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="${el.dataset.vtitle} — Vimeo"></iframe>`;
+    modal.classList.add("open");
+  });
+  el.addEventListener("keydown", e => {
+    if ((e.key === "Enter" || e.key === " ") && el.classList.contains("video-solo")) { e.preventDefault(); el.click(); }
+  });
+}
+function closeVideo() { modal.classList.remove("open"); modalFrame.innerHTML = ""; }
+document.getElementById("modal-close").addEventListener("click", closeVideo);
+modal.addEventListener("click", e => { if (e.target === modal) closeVideo(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeVideo(); }, true);
+
+/* ----- Custom cursor ----- */
+(function () {
+  if (window.matchMedia("(pointer: coarse)").matches) return;
+  const c = document.getElementById("cursor");
+  let x = -100, y = -100, cx = -100, cy = -100;
+  document.addEventListener("pointermove", e => { x = e.clientX; y = e.clientY; });
+  (function loop() {
+    cx += (x - cx) * 0.22; cy += (y - cy) * 0.22;
+    c.style.left = cx + "px"; c.style.top = cy + "px";
+    requestAnimationFrame(loop);
+  })();
+  document.addEventListener("pointerover", e => {
+    const t = e.target.closest("[data-cursor]");
+    if (t) { c.classList.add("big"); c.textContent = t.dataset.cursor; }
+    else { c.classList.remove("big"); c.textContent = ""; }
+  });
+})();
+</script>
+</body>
+</html>

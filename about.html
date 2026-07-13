@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Muhammad, Colorist</title>
+<meta name="description" content="About Muhammad — colorist based in Bahrain, working across the GCC.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@1,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  body { overflow-y: auto; }
+  .about-wrap { max-width: 660px; margin: 0 auto; padding: calc(var(--bar-h) + 70px) 24px calc(var(--bar-h) + 80px); }
+  .about-wrap h1 { font-family: "Anton", sans-serif; font-size: clamp(44px, 9vw, 90px); line-height: .95; text-transform: uppercase; margin-bottom: 8px; }
+  .about-wrap h1 .it { font-family: "Cormorant Garamond", Georgia, serif; font-style: italic; font-weight: 600; text-transform: none; font-size: .85em; display: block; color: transparent; background: linear-gradient(100deg, #3fb6a8 5%, #f0ede5 50%, #e8a04c 95%); -webkit-background-clip: text; background-clip: text; }
+  .about-wrap p { color: var(--muted); margin: 20px 0 0; font-size: 16px; line-height: 1.7; }
+  .about-wrap p strong { color: var(--ink); font-weight: 700; }
+  .label { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--faint); margin: 54px 0 14px; padding-top: 32px; border-top: 1px solid var(--line); }
+  .about-wrap ul { list-style: none; }
+  .about-wrap ul li { padding: 13px 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 15px; display: flex; gap: 14px; align-items: baseline; }
+  .about-wrap ul li::before { content: attr(data-i); font-family: "Space Mono", monospace; font-size: 10px; color: var(--faint); letter-spacing: 0.1em; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="bar top">
+  <span class="edge"><span>MUHAMMAD ▸ COLORIST</span><span>KODAK 5219 ▸ 500T</span></span>
+  <div class="nav-links">
+    <a href="index.html">Work</a>
+    <a href="archive.html">Archive</a>
+    <a href="about.html" class="active">About</a>
+  </div>
+</div>
+
+<div class="bar bottom">
+  <span class="edge"><span>ABOUT ▸ CONTACT</span></span>
+  <span>BAHRAIN / GCC</span>
+</div>
+
+<main class="about-wrap">
+  <h1>The grade is<span class="it">where the story lives.</span></h1>
+
+  <!-- EDIT: replace with your own bio -->
+  <p><strong>I'm Muhammad, a colorist based in Bahrain</strong>, grading commercials, films, aerial work and music videos for clients across the GCC.</p>
+  <p>I work in DaVinci Resolve Studio, from flat LOG and RAW footage through to final delivery — SDR, HDR, cinema or social. My background in drone cinematography and photogrammetry through Bahrain Drone Studios means I grade aerial footage with a shooter's understanding of how it was captured.</p>
+
+  <div class="label">Services</div>
+  <ul>
+    <li data-i="01">Commercial &amp; brand film color grading</li>
+    <li data-i="02">Short film &amp; documentary grading</li>
+    <li data-i="03">Aerial / drone footage grading &amp; HDR delivery</li>
+    <li data-i="04">Music video looks &amp; creative grading</li>
+    <li data-i="05">Camera matching &amp; shot balancing</li>
+    <li data-i="06">Remote grading sessions</li>
+  </ul>
+
+  <div class="label">Contact</div>
+  <!-- EDIT: replace the placeholder links with your real email,
+       WhatsApp number (973XXXXXXXX), Instagram and LinkedIn -->
+  <div class="contact-row" style="justify-content:flex-start; margin-top:8px;">
+    <a href="mailto:hello@example.com">Email</a>
+    <a href="https://wa.me/973XXXXXXXX" target="_blank" rel="noopener">WhatsApp</a>
+    <a href="https://instagram.com/yourhandle" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</main>
+
+</body>
+</html>
