@@ -1,0 +1,18 @@
+  {
+    title: "Desert Dawn — Brand Film",
+    category: "Commercials",
+    camera: "RED V-Raptor",
+    software: "DaVinci Resolve Studio",
+    notes: "Still-only entry: one graded frame, no slider. Warm sunrise palette built from cool dawn footage.",
+    afterImage: "https://picsum.photos/id/1016/1280/720"
+  },
+  {
+    title: "Harbour Lines — Documentary",
+    category: "Film",
+    camera: "Canon C70",
+    software: "DaVinci Resolve Studio",
+    notes: "Naturalistic grade, matched three cameras across two shoot days.",
+    beforeImage: "https://picsum.photos/id/1040/1280/720?grayscale",
+    afterImage: "https://picsum.photos/id/1040/1280/720",
+    vimeoId: "76979871"
+  }

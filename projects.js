@@ -40,58 +40,30 @@ const PROJECTS = [
   {
     title: "Yelo — KSA",
     category: "TVC",
-    software: "DaVinci Resolve Studio",
+    software: "",
     beforeImage: "images/Yelo/1.png",
     afterImage: "images/Yelo/2.png",
-    vimeoId: "559342685",
     featured: true
   },
   {
-    title: "Salt & Light — Short Film",
-    category: "Film",
-    camera: "Sony FX6",
-    software: "DaVinci Resolve Studio",
-    notes: "Video-only entry: the before/after comparison is cut into the film itself.",
-    vimeoId: "76979871",
-    featured: true
-  },
-  {
-    title: "Manama Coastline — Aerial Reel",
+    title: "Bahrain",
     category: "Drone",
-    camera: "DJI Inspire 3 / X9-8K",
-    software: "DaVinci Resolve Studio",
-    notes: "D-Log to HDR delivery. Balanced harsh midday Gulf sun, recovered highlight detail in water and glass.",
-    beforeImage: "https://picsum.photos/id/1011/1280/720?grayscale",
-    afterImage: "https://picsum.photos/id/1011/1280/720",
+    camera: "",
+    software: "",
+    notes: "",
+    beforeImage: "images/Tree Sample/Tree Sample_1.1.4.png",
+    afterImage: "images/Tree Sample/Tree Sample_1.1.1.png",
+    featured: true
+  },
+  {
+    title: "Arcapita - Interview",
+    category: "Corporate",
+    camera: "",
+    software: "",
+    notes: "",
+    beforeImage: "images/arcapita/a.png",
+    afterImage: "images/arcapita/b.png",
     vimeoId: "76979871",
     featured: true
   },
-  {
-    title: "Midnight District — Music Video",
-    category: "Music Videos",
-    camera: "Blackmagic URSA Mini Pro 12K",
-    software: "DaVinci Resolve Studio",
-    notes: "Images-only entry: slider without a video. High-contrast neon look, split-toned shadows, halation pass.",
-    beforeImage: "https://picsum.photos/id/1067/1280/720?grayscale",
-    afterImage: "https://picsum.photos/id/1067/1280/720",
-    featured: true
-  },
-  {
-    title: "Desert Dawn — Brand Film",
-    category: "Commercials",
-    camera: "RED V-Raptor",
-    software: "DaVinci Resolve Studio",
-    notes: "Still-only entry: one graded frame, no slider. Warm sunrise palette built from cool dawn footage.",
-    afterImage: "https://picsum.photos/id/1016/1280/720"
-  },
-  {
-    title: "Harbour Lines — Documentary",
-    category: "Film",
-    camera: "Canon C70",
-    software: "DaVinci Resolve Studio",
-    notes: "Naturalistic grade, matched three cameras across two shoot days.",
-    beforeImage: "https://picsum.photos/id/1040/1280/720?grayscale",
-    afterImage: "https://picsum.photos/id/1040/1280/720",
-    vimeoId: "76979871"
-  }
 ];
