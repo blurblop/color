@@ -63,7 +63,6 @@ const PROJECTS = [
     notes: "",
     beforeImage: "images/arcapita/a.png",
     afterImage: "images/arcapita/b.png",
-    vimeoId: "76979871",
     featured: true
   },
 ];
