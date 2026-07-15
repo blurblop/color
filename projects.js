@@ -39,11 +39,20 @@
 const PROJECTS = [
   {
     title: "Canon C700",
-    category: "TVC",
+    category: "Commercial",
     software: "",
     beforeImage: "images/Canon C700/Canon C700_2.1.1.png",
     afterImage: "images/Canon C700/Canon C700_1.1.1.png",
     vimeoId: "1210169871"
+    featured: true
+  },
+  {
+    title: "Sony a7S3",
+    category: ""Commercial",",
+    software: "",
+    beforeImage: "images/sony a7S3/1.png",
+    afterImage: "images/sony a7S3/2.png",
+    vimeoId: "1210173308"
     featured: true
   },
   {
