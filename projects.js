@@ -71,7 +71,7 @@ const PROJECTS = [
     notes: "",
     beforeImage: "images/Tree Sample/Tree Sample_1.1.4.png",
     afterImage: "images/Tree Sample/Tree Sample_1.1.1.png",
-    featured: true
+    featured: false
   },
   {
     title: "Arcapita - Interview",
