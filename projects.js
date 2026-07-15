@@ -64,6 +64,15 @@ const PROJECTS = [
     featured: true
   },
   {
+    title: "DJI Inspire 3 ( Zenmuse X9)",
+    category: "Drone",
+    software: "",
+    beforeImage: "images/inspire 3/1.png",
+    afterImage: "images/inspire 3/2.png",
+    vimeoId: "1210202758",
+    featured: true
+  },
+  {
     title: "Bahrain",
     category: "Drone",
     camera: "",
