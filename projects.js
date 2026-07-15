@@ -43,6 +43,7 @@ const PROJECTS = [
     software: "",
     beforeImage: "images/Canon C700/Canon C700_2.1.1.png",
     afterImage: "images/Canon C700/Canon C700_1.1.1.png",
+    vimeoId: "1210169871"
     featured: true
   },
   {
