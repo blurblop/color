@@ -48,7 +48,7 @@ const PROJECTS = [
   },
   {
     title: "Sony a7S3",
-    category: ""Commercials",",
+    category: "Commercials",
     software: "",
     beforeImage: "images/sony a7S3/1.png",
     afterImage: "images/sony a7S3/2.png",
