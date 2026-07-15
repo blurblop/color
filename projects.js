@@ -38,6 +38,14 @@
 
 const PROJECTS = [
   {
+    title: "Canon C700",
+    category: "TVC",
+    software: "",
+    beforeImage: "images/Canon C700/Canon C700_2.1.1.png",
+    afterImage: "images/Canon C700/Canon C700_1.1.1.png",
+    featured: true
+  },
+  {
     title: "Yelo — KSA",
     category: "TVC",
     software: "",
