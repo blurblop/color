@@ -43,7 +43,7 @@ const PROJECTS = [
     software: "",
     beforeImage: "images/Canon C700/Canon C700_2.1.1.png",
     afterImage: "images/Canon C700/Canon C700_1.1.1.png",
-    vimeoId: "1210169871"
+    vimeoId: "1210169871",
     featured: true
   },
   {
@@ -52,7 +52,7 @@ const PROJECTS = [
     software: "",
     beforeImage: "images/sony a7S3/1.png",
     afterImage: "images/sony a7S3/2.png",
-    vimeoId: "1210173308"
+    vimeoId: "1210173308",
     featured: true
   },
   {
