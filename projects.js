@@ -47,6 +47,13 @@ const PROJECTS = [
     featured: true
   },
   {
+    title: "ALEXA LF",
+    category: "Cinematic",
+    software: "",
+    vimeoId: "1211298126",
+    featured: true
+  },
+  {
     title: "Sony a7S3",
     category: "Commercials",
     software: "",
